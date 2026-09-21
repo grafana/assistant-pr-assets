@@ -1,8 +1,0 @@
-*
-!Dockerfile
-!package.json
-!package-lock.json
-!generate.mjs
-!grafana_icon.svg
-!publish.mjs
-!publish.test.mjs
