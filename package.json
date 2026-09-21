@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "dependencies": {
-    "@grafana/data": "13.1.0-25893932881",
-    "@grafana/ui": "13.1.0-25893932881",
+    "@grafana/data": "13.2.2",
+    "@grafana/ui": "13.2.2",
     "@playwright/test": "1.62.0",
     "esbuild": "0.28.1",
     "inter-ui": "4.1.1",
