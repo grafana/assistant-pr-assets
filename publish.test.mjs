@@ -3,7 +3,7 @@ import { mkdtemp, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
-import { gitBlob, githubClient, loadAssets, publish, sameFiles } from './publish.mjs';
+import { gitBlob, githubClient, loadAssets, loadLicense, publish, sameFiles } from './publish.mjs';
 
 const files = [{ path: 'open-chat-light.svg', sha: gitBlob(Buffer.from('<svg/>')), contents: Buffer.from('<svg/>').toString('base64') }];
 const remote = files.map(file => ({ ...file, mode: '100644', type: 'blob' }));
@@ -108,6 +108,18 @@ test('Git blob hashing and exact file-set comparison', () => {
   assert.equal(sameFiles(files, [{ ...remote[0], mode: '120000' }]), false);
   assert.equal(sameFiles(files, []), false);
   assert.equal(sameFiles(files, [...remote, { ...remote[0], path: 'extra.svg' }]), false);
+});
+
+test('license is published as a root file', async t => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'publication-license-test-'));
+  t.after(() => rm(directory, { recursive: true, force: true }));
+  const filename = path.join(directory, 'LICENSE');
+  await writeFile(filename, 'Apache License\n');
+  assert.deepEqual(await loadLicense(filename), {
+    path: 'LICENSE',
+    sha: gitBlob(Buffer.from('Apache License\n')),
+    contents: Buffer.from('Apache License\n').toString('base64'),
+  });
 });
 
 test('only the complete self-contained SVG allowlist is accepted', async t => {

@@ -1,6 +1,6 @@
 FROM node:24-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 AS publisher
 WORKDIR /renderer
-COPY publish.mjs publish.test.mjs ./
+COPY LICENSE publish.mjs publish.test.mjs ./
 RUN node --test publish.test.mjs
 ENTRYPOINT ["node", "publish.mjs"]
 

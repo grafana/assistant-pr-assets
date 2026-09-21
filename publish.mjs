@@ -31,6 +31,11 @@ export async function loadAssets(directory) {
   }));
 }
 
+export async function loadLicense(filename) {
+  const bytes = await readFile(filename);
+  return { path: 'LICENSE', sha: gitBlob(bytes), contents: bytes.toString('base64') };
+}
+
 export function githubClient(token, fetchRequest = fetch) {
   if (!token) throw new Error('GITHUB_TOKEN is required');
   return async (endpoint, body) => {
@@ -118,7 +123,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     if (process.argv.slice(2).some(arg => arg !== '--check')) throw new Error('Usage: publish.mjs [--check]');
     const result = await publish({
       api: githubClient(process.env.GITHUB_TOKEN),
-      files: await loadAssets('/output'),
+      files: [...await loadAssets('/output'), await loadLicense('/renderer/LICENSE')],
       check: process.argv.includes('--check'),
       sourceCommit: process.env.SOURCE_COMMIT || '',
     });
