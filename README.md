@@ -115,4 +115,3 @@ _Unknown origin (private repo)_:
 
 <p><a href="https://grafana.example/a/grafana-assistant-app/workspace/00000000-0000-4000-8000-000000000001"><picture><source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/grafana/assistant-pr-assets/4d32c541c3f2bf99af31b946648884fbc722954e/open-chat-dark.svg"><source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/grafana/assistant-pr-assets/4d32c541c3f2bf99af31b946648884fbc722954e/open-chat-light.svg"><img src="https://raw.githubusercontent.com/grafana/assistant-pr-assets/4d32c541c3f2bf99af31b946648884fbc722954e/open-chat-light.svg" height="32" alt="Open Chat"></picture></a><br>
 <sub>Created by <a href="https://grafana.com/products/cloud/ai-assistant/">Grafana Assistant</a>.</sub></p>
-
