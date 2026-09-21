@@ -1,4 +1,4 @@
-Looks like this:
+# Grafana Assistant PR assets
 
 _Chat (public repo)_:
 
