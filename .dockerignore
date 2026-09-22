@@ -4,5 +4,6 @@
 !package-lock.json
 !generate.mjs
 !grafana_icon.svg
+!LICENSE
 !publish.mjs
 !publish.test.mjs
