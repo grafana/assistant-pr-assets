@@ -4,8 +4,8 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const repository = 'grafana/assistant-pr-assets';
-const filenames = ['chat', 'investigation', 'alert', 'incident']
-  .flatMap(kind => ['light', 'dark'].map(mode => `open-${kind}-${mode}.svg`)).sort();
+const filenames = ['open-chat', 'open-investigation', 'open-alert', 'open-incident', 'fix-in-grafana']
+  .flatMap(kind => ['light', 'dark'].map(mode => `${kind}-${mode}.svg`)).sort();
 
 export function gitBlob(bytes) {
   return createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
