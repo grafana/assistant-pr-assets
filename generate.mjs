@@ -12,7 +12,13 @@ const source = fileURLToPath(new URL('./', import.meta.url));
 const outputRoot = process.env.PUBLICATION_ASSETS_OUTPUT_DIR || '/output';
 // SVGs are publication artifacts, never checked into main.
 const generated = outputRoot;
-const buttonKinds = ['chat', 'investigation', 'alert', 'incident'];
+const buttons = [
+  { name: 'open-chat', label: 'Open Chat', icon: 'GrafanaLogo' },
+  { name: 'open-investigation', label: 'Open Investigation', icon: 'GrafanaLogo' },
+  { name: 'open-alert', label: 'View Alert', icon: 'Bell' },
+  { name: 'open-incident', label: 'View Incident', icon: 'Incident' },
+  { name: 'fix-in-grafana', label: 'Fix in Grafana', icon: 'GrafanaLogo' },
+];
 const require = createRequire(import.meta.url);
 const ui = path.dirname(require.resolve('@grafana/ui/package.json'));
 const esbuild = await import('esbuild');
@@ -41,12 +47,13 @@ const result = await esbuild.build({
         return React.createElement('svg', {className, width: 16, height: 16, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true,
           dangerouslySetInnerHTML: {__html: ${JSON.stringify(fireContents)}}});
       }
-      const buttons = [['Chat', GrafanaLogo], ['Investigation', GrafanaLogo], ['Alert', Bell], ['Incident', Incident]];
+      const buttons = ${JSON.stringify(buttons)};
+      const icons = { GrafanaLogo, Bell, Incident };
       createRoot(document.getElementById('root')).render(
         // Intentional optical adjustment for the reviewed footer design.
         React.createElement(ThemeContext.Provider, {value: createTheme({colors: {mode}, typography: {fontWeightMedium: 600}})},
-          React.createElement('div', {style: {display: 'flex', gap: 16}}, buttons.map(([label, Icon]) =>
-            React.createElement(Button, {key: label, variant: 'secondary', size: 'md', style: {paddingLeft: 11}, icon: React.createElement(Icon, {width: 16, height: 16})}, (['Alert', 'Incident'].includes(label) ? 'View ' : 'Open ') + label)))));
+          React.createElement('div', {style: {display: 'flex', gap: 16}}, buttons.map(({name, label, icon}) =>
+            React.createElement(Button, {key: name, variant: 'secondary', size: 'md', style: {paddingLeft: 11}, icon: React.createElement(icons[icon], {width: 16, height: 16})}, label)))));
     `,
     resolveDir: source,
     loader: 'js',
@@ -76,8 +83,7 @@ try {
       #root button[data-capture] { position: fixed; top: 0; left: 0; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
     }`});
     await page.mouse.move(1000, 700);
-    for (const kind of buttonKinds) {
-      const label = (['alert', 'incident'].includes(kind) ? 'View ' : 'Open ') + kind[0].toUpperCase() + kind.slice(1);
+    for (const { name: kind, label } of buttons) {
       const button = page.getByRole('button', { name: label, exact: true });
       // Integer capture bounds avoid resampling the text in the Markdown image.
       await button.evaluate(element => { element.style.width = Math.ceil(element.getBoundingClientRect().width) + 'px'; });
@@ -95,7 +101,7 @@ try {
       dimensions[kind] = {width: bounds.width, height: bounds.height};
       await page.locator('[data-capture]').evaluateAll(elements => elements.forEach(element => element.removeAttribute('data-capture')));
       await button.evaluate(element => element.setAttribute('data-capture', ''));
-      await page.pdf({path: path.join(output, `open-${kind}-${mode}.pdf`), width: `${bounds.width}px`, height: `${bounds.height}px`, printBackground: true, margin: {top: 0, right: 0, bottom: 0, left: 0}});
+      await page.pdf({path: path.join(output, `${kind}-${mode}.pdf`), width: `${bounds.width}px`, height: `${bounds.height}px`, printBackground: true, margin: {top: 0, right: 0, bottom: 0, left: 0}});
     }
   }
 } finally {
@@ -105,15 +111,15 @@ try {
 // Outline glyphs so GitHub needs neither installed nor externally loaded fonts.
 await mkdir(generated, {recursive: true});
 
-for (const kind of buttonKinds) {
+for (const { name: kind } of buttons) {
   for (const mode of ['light', 'dark']) {
-    const base = path.join(output, `open-${kind}-${mode}`);
+    const base = path.join(output, `${kind}-${mode}`);
     execFileSync('pdftocairo', ['-svg', `${base}.pdf`, `${base}.svg`]);
     const svg = await readFile(`${base}.svg`, 'utf8');
     if (/<(?:image|foreignObject|text)\b/.test(svg)) {
       throw new Error(`Expected vector paths without raster images or font dependencies: ${base}.svg`);
     }
-    await writeFile(path.join(generated, `open-${kind}-${mode}.svg`), svg);
+    await writeFile(path.join(generated, `${kind}-${mode}.svg`), svg);
     console.log('Vector capture:', `${base}.svg`);
   }
 }

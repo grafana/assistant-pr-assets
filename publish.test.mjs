@@ -125,12 +125,12 @@ test('license is published as a root file', async t => {
 test('only the complete self-contained SVG allowlist is accepted', async t => {
   const directory = await mkdtemp(path.join(tmpdir(), 'publication-test-'));
   t.after(() => rm(directory, { recursive: true, force: true }));
-  for (const kind of ['chat', 'investigation', 'alert', 'incident']) {
+  for (const kind of ['open-chat', 'open-investigation', 'open-alert', 'open-incident', 'fix-in-grafana']) {
     for (const mode of ['light', 'dark']) {
-      await writeFile(path.join(directory, `open-${kind}-${mode}.svg`), '<svg><path d="M0 0"/></svg>');
+      await writeFile(path.join(directory, `${kind}-${mode}.svg`), '<svg><path d="M0 0"/></svg>');
     }
   }
-  assert.equal((await loadAssets(directory)).length, 8);
+  assert.equal((await loadAssets(directory)).length, 10);
   await writeFile(path.join(directory, 'extra.txt'), 'not an asset');
   await assert.rejects(loadAssets(directory), /exactly/);
   await rm(path.join(directory, 'extra.txt'));
