@@ -4,7 +4,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const repository = 'grafana/assistant-pr-assets';
-const filenames = ['open-chat', 'open-investigation', 'open-alert', 'open-incident', 'fix-in-grafana']
+const filenames = ['open-chat', 'open-investigation', 'open-alert', 'open-incident', 'fix-in-grafana', 'monitor-rollout']
   .flatMap(kind => ['light', 'dark'].map(mode => `${kind}-${mode}.svg`)).sort();
 
 export function gitBlob(bytes) {
