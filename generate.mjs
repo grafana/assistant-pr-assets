@@ -19,6 +19,7 @@ const buttons = [
   { name: 'open-incident', label: 'View Incident', icon: 'Incident' },
   { name: 'fix-in-grafana', label: 'Fix in Grafana', icon: 'GrafanaLogo' },
   { name: 'monitor-rollout', label: 'Monitor rollout', icon: 'GrafanaLogo' },
+  { name: 'review-in-grafana', label: 'Review in Grafana', icon: 'GrafanaLogo' },
 ];
 const require = createRequire(import.meta.url);
 const ui = path.dirname(require.resolve('@grafana/ui/package.json'));
