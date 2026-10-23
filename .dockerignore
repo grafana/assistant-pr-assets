@@ -3,6 +3,7 @@
 !package.json
 !package-lock.json
 !generate.mjs
+!buttons.mjs
 !grafana_icon.svg
 !LICENSE
 !publish.mjs

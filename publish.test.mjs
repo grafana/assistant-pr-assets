@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { gitBlob, githubClient, loadAssets, loadLicense, publish, sameFiles } from './publish.mjs';
+import { buttons } from './buttons.mjs';
 
 const files = [{ path: 'open-chat-light.svg', sha: gitBlob(Buffer.from('<svg/>')), contents: Buffer.from('<svg/>').toString('base64') }];
 const remote = files.map(file => ({ ...file, mode: '100644', type: 'blob' }));
@@ -125,12 +126,12 @@ test('license is published as a root file', async t => {
 test('only the complete self-contained SVG allowlist is accepted', async t => {
   const directory = await mkdtemp(path.join(tmpdir(), 'publication-test-'));
   t.after(() => rm(directory, { recursive: true, force: true }));
-  for (const kind of ['open-chat', 'open-investigation', 'open-alert', 'open-incident', 'fix-in-grafana', 'monitor-rollout', 'review-in-grafana']) {
+  for (const { name: kind } of buttons) {
     for (const mode of ['light', 'dark']) {
       await writeFile(path.join(directory, `${kind}-${mode}.svg`), '<svg><path d="M0 0"/></svg>');
     }
   }
-  assert.equal((await loadAssets(directory)).length, 14);
+  assert.equal((await loadAssets(directory)).length, buttons.length * 2);
   await writeFile(path.join(directory, 'extra.txt'), 'not an asset');
   await assert.rejects(loadAssets(directory), /exactly/);
   await rm(path.join(directory, 'extra.txt'));
