@@ -17,6 +17,7 @@ const buttons = [
   { name: 'open-investigation', label: 'Open Investigation', icon: 'GrafanaLogo' },
   { name: 'open-alert', label: 'View Alert', icon: 'Bell' },
   { name: 'open-incident', label: 'View Incident', icon: 'Incident' },
+  { name: 'open-automation', label: 'View Automation', icon: 'Calendar' },
   { name: 'fix-in-grafana', label: 'Fix in Grafana', icon: 'GrafanaLogo' },
   { name: 'monitor-rollout', label: 'Monitor rollout', icon: 'GrafanaLogo' },
   { name: 'review-in-grafana', label: 'Review in Grafana', icon: 'GrafanaLogo' },
@@ -30,6 +31,7 @@ const bell = await readFile(path.join(ui, 'dist/public/img/icons/unicons/bell.sv
 const bellContents = bell.match(/<svg[^>]*>([\s\S]*)<\/svg>/)[1];
 const fire = await readFile(path.join(ui, 'dist/public/img/icons/unicons/fire.svg'), 'utf8');
 const fireContents = fire.match(/<svg[^>]*>([\s\S]*)<\/svg>/)[1];
+const calendarContents = (await readFile(path.join(ui, 'dist/public/img/icons/unicons/calendar-alt.svg'), 'utf8')).match(/<svg[^>]*>([\s\S]*)<\/svg>/)[1];
 const result = await esbuild.build({
   stdin: {
     contents: `
@@ -49,8 +51,9 @@ const result = await esbuild.build({
         return React.createElement('svg', {className, width: 16, height: 16, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true,
           dangerouslySetInnerHTML: {__html: ${JSON.stringify(fireContents)}}});
       }
+      const Calendar = ({className}) => React.createElement('svg', {className, width: 16, height: 16, viewBox: '0 0 24 24', fill: 'currentColor', 'aria-hidden': true, dangerouslySetInnerHTML: {__html: ${JSON.stringify(calendarContents)}}});
       const buttons = ${JSON.stringify(buttons)};
-      const icons = { GrafanaLogo, Bell, Incident };
+      const icons = { GrafanaLogo, Bell, Incident, Calendar };
       createRoot(document.getElementById('root')).render(
         // Intentional optical adjustment for the reviewed footer design.
         React.createElement(ThemeContext.Provider, {value: createTheme({colors: {mode}, typography: {fontWeightMedium: 600}})},
