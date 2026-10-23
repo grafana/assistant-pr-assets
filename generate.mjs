@@ -7,21 +7,12 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { chromium } from '@playwright/test';
+import { buttons } from './buttons.mjs';
 
 const source = fileURLToPath(new URL('./', import.meta.url));
 const outputRoot = process.env.PUBLICATION_ASSETS_OUTPUT_DIR || '/output';
 // SVGs are publication artifacts, never checked into main.
 const generated = outputRoot;
-const buttons = [
-  { name: 'open-chat', label: 'Open Chat', icon: 'GrafanaLogo' },
-  { name: 'open-investigation', label: 'Open Investigation', icon: 'GrafanaLogo' },
-  { name: 'open-alert', label: 'View Alert', icon: 'Bell' },
-  { name: 'open-incident', label: 'View Incident', icon: 'Incident' },
-  { name: 'open-automation', label: 'View Automation', icon: 'Calendar' },
-  { name: 'fix-in-grafana', label: 'Fix in Grafana', icon: 'GrafanaLogo' },
-  { name: 'monitor-rollout', label: 'Monitor rollout', icon: 'GrafanaLogo' },
-  { name: 'review-in-grafana', label: 'Review in Grafana', icon: 'GrafanaLogo' },
-];
 const require = createRequire(import.meta.url);
 const ui = path.dirname(require.resolve('@grafana/ui/package.json'));
 const esbuild = await import('esbuild');

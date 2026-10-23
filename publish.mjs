@@ -2,9 +2,10 @@ import { createHash } from 'node:crypto';
 import { readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { buttons } from './buttons.mjs';
 
 const repository = 'grafana/assistant-pr-assets';
-const filenames = ['open-chat', 'open-investigation', 'open-alert', 'open-incident', 'fix-in-grafana', 'monitor-rollout', 'review-in-grafana']
+const filenames = buttons.map(({ name }) => name)
   .flatMap(kind => ['light', 'dark'].map(mode => `${kind}-${mode}.svg`)).sort();
 
 export function gitBlob(bytes) {

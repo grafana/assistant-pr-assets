@@ -1,6 +1,6 @@
 FROM node:24-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 AS publisher
 WORKDIR /renderer
-COPY LICENSE publish.mjs publish.test.mjs ./
+COPY LICENSE buttons.mjs publish.mjs publish.test.mjs ./
 RUN node --test publish.test.mjs
 ENTRYPOINT ["node", "publish.mjs"]
 
@@ -15,6 +15,6 @@ RUN rm -f /etc/apt/sources.list.d/ubuntu.sources && \
 WORKDIR /renderer
 COPY package*.json ./
 RUN npm ci --no-audit --no-fund
-COPY grafana_icon.svg generate.mjs ./
+COPY grafana_icon.svg buttons.mjs generate.mjs ./
 ENV PUBLICATION_ASSETS_OUTPUT_DIR=/output
 ENTRYPOINT ["node", "generate.mjs"]
