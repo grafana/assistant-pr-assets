@@ -1,4 +1,4 @@
-FROM node:24-bookworm-slim@sha256:0e0ff40c39bc087845bfb27465a0df4ea419520094bc35842ff83dd8cbe6f9b6 AS publisher
+FROM node:24-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c AS publisher
 WORKDIR /renderer
 COPY LICENSE buttons.mjs publish.mjs publish.test.mjs ./
 RUN node --test publish.test.mjs
